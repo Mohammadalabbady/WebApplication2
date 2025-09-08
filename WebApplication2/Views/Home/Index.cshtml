@@ -1,0 +1,140 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="container-fluid">
+    <!-- Hero Section -->
+    <div class="row mb-5">
+        <div class="col-12 text-center">
+            <div class="py-5">
+                <h1 class="display-3 text-primary mb-4">
+                    <i class="fas fa-shield-alt"></i> Tracker Case Management
+                </h1>
+                <p class="lead mb-4">Comprehensive compliance tracking and regulatory case management system</p>
+                <div class="d-flex justify-content-center gap-3">
+                    <a asp-controller="Cases" asp-action="Index" class="btn btn-primary btn-lg">
+                        <i class="fas fa-folder"></i> View Cases
+                    </a>
+                    <a asp-controller="Cases" asp-action="Create" class="btn btn-success btn-lg">
+                        <i class="fas fa-plus"></i> Create New Case
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Features Section -->
+    <div class="row mb-5">
+        <div class="col-12">
+            <h2 class="text-center mb-5">System Features</h2>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-3 col-md-6 mb-4">
+            <div class="card h-100 shadow-sm">
+                <div class="card-body text-center">
+                    <i class="fas fa-folder-open fa-3x text-primary mb-3"></i>
+                    <h5 class="card-title">Case Management</h5>
+                    <p class="card-text">Create, track, and manage compliance cases with full audit trail and documentation.</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-lg-3 col-md-6 mb-4">
+            <div class="card h-100 shadow-sm">
+                <div class="card-body text-center">
+                    <i class="fas fa-tasks fa-3x text-success mb-3"></i>
+                    <h5 class="card-title">Workflow Automation</h5>
+                    <p class="card-text">Automated approval workflows with role-based access control and notifications.</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-lg-3 col-md-6 mb-4">
+            <div class="card h-100 shadow-sm">
+                <div class="card-body text-center">
+                    <i class="fas fa-chart-line fa-3x text-info mb-3"></i>
+                    <h5 class="card-title">Reporting & Analytics</h5>
+                    <p class="card-text">Comprehensive reporting and analytics for compliance monitoring and decision making.</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-lg-3 col-md-6 mb-4">
+            <div class="card h-100 shadow-sm">
+                <div class="card-body text-center">
+                    <i class="fas fa-file-alt fa-3x text-warning mb-3"></i>
+                    <h5 class="card-title">Document Management</h5>
+                    <p class="card-text">Secure file attachments and document management for all case-related materials.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Actions Section -->
+    <div class="row mb-5">
+        <div class="col-12">
+            <h2 class="text-center mb-5">Quick Actions</h2>
+        </div>
+    </div>
+
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <a asp-controller="Cases" asp-action="Create" class="btn btn-outline-primary btn-lg w-100 py-4">
+                        <i class="fas fa-plus fa-2x mb-2 d-block"></i>
+                        <strong>Add New Case</strong><br>
+                        <small>Create a new compliance case</small>
+                    </a>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <a asp-controller="Cases" asp-action="Workflow" class="btn btn-outline-warning btn-lg w-100 py-4">
+                        <i class="fas fa-tasks fa-2x mb-2 d-block"></i>
+                        <strong>Workflow Management</strong><br>
+                        <small>Review pending approvals</small>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- System Information -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card bg-light">
+                <div class="card-body">
+                    <h5 class="card-title">
+                        <i class="fas fa-info-circle"></i> About the System
+                    </h5>
+                    <p class="card-text">
+                        The Tracker Case Management system is designed to streamline compliance tracking and regulatory case management. 
+                        It provides a comprehensive platform for managing findings, tracking remedial actions, and maintaining audit trails 
+                        for regulatory compliance requirements.
+                    </p>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h6>Key Capabilities:</h6>
+                            <ul>
+                                <li>Annual work plan management</li>
+                                <li>Legislation and compliance control tracking</li>
+                                <li>Case workflow and approval processes</li>
+                                <li>Remedial plan management</li>
+                                <li>Document attachment and management</li>
+                            </ul>
+                        </div>
+                        <div class="col-md-6">
+                            <h6>User Roles:</h6>
+                            <ul>
+                                <li><strong>Regulations Admin:</strong> Full system control</li>
+                                <li><strong>Planner:</strong> Create and modify cases</li>
+                                <li><strong>Final User:</strong> View-only access</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

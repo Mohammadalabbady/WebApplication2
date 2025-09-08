@@ -1,0 +1,159 @@
+@model WebApplication2.ViewModels.CaseUpdateViewModel
+
+@{
+    ViewData["Title"] = "Update Case";
+}
+
+<div class="container-fluid">
+    <!-- Header Section -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <h1 class="h3 mb-0 text-gray-800">Update Case</h1>
+            <p class="mb-4">Record changes and updates for case management</p>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12">
+            <div class="card shadow">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">Case Update Information</h6>
+                </div>
+                <div class="card-body">
+                    <form asp-action="Update" method="post" enctype="multipart/form-data">
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                        
+                        <!-- Case Selection -->
+                        <div class="row mb-4">
+                            <div class="col-12">
+                                <h5 class="text-primary mb-3">Case Selection</h5>
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label asp-for="CaseId" class="control-label"></label>
+                                    <select asp-for="CaseId" class="form-select" asp-items="@(new SelectList(Model.Cases, "Id", "CaseNumber"))">
+                                        <option value="">-- Select Case --</option>
+                                    </select>
+                                    <span asp-validation-for="CaseId" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label asp-for="UpdateType" class="control-label"></label>
+                                    <select asp-for="UpdateType" class="form-select" asp-items="@(new SelectList(Model.UpdateTypes))">
+                                        <option value="">-- Select Update Type --</option>
+                                    </select>
+                                    <span asp-validation-for="UpdateType" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Update Details -->
+                        <div class="row mb-4">
+                            <div class="col-12">
+                                <h5 class="text-primary mb-3">Update Details</h5>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label asp-for="OldValue" class="control-label"></label>
+                                    <input asp-for="OldValue" class="form-control" placeholder="Enter the old/current value" />
+                                    <small class="form-text text-muted">The value before the change</small>
+                                    <span asp-validation-for="OldValue" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label asp-for="NewValue" class="control-label"></label>
+                                    <input asp-for="NewValue" class="form-control" placeholder="Enter the new value" />
+                                    <small class="form-text text-muted">The value after the change</small>
+                                    <span asp-validation-for="NewValue" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="form-group">
+                                    <label asp-for="DetailsOfChange" class="control-label"></label>
+                                    <textarea asp-for="DetailsOfChange" class="form-control" rows="4" 
+                                              placeholder="Provide detailed explanation of the change, reason for update, and any additional context..."></textarea>
+                                    <small class="form-text text-muted">Explain why this change was made and its impact</small>
+                                    <span asp-validation-for="DetailsOfChange" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Attachments -->
+                        <div class="row mb-4">
+                            <div class="col-12">
+                                <h5 class="text-primary mb-3">Supporting Documents</h5>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="form-group">
+                                    <label asp-for="Attachments" class="control-label">Supporting Documents (Optional)</label>
+                                    <input asp-for="Attachments" class="form-control" type="file" multiple accept=".pdf,.doc,.docx,.xls,.xlsx,.jpg,.jpeg,.png" />
+                                    <small class="form-text text-muted">You can select multiple files to support this update. Supported formats: PDF, DOC, DOCX, XLS, XLSX, JPG, JPEG, PNG</small>
+                                    <span asp-validation-for="Attachments" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Submit Buttons -->
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="form-group">
+                                    <button type="submit" class="btn btn-primary">
+                                        <i class="fas fa-save"></i> Record Update
+                                    </button>
+                                    <a asp-action="Index" class="btn btn-secondary">
+                                        <i class="fas fa-arrow-left"></i> Back to List
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    
+    <script>
+        $(document).ready(function() {
+            // Auto-populate old value when case and update type are selected
+            $('#CaseId, #UpdateType').change(function() {
+                var caseId = $('#CaseId').val();
+                var updateType = $('#UpdateType').val();
+                
+                if (caseId && updateType) {
+                    // In a real application, you would make an AJAX call here
+                    // to get the current value for the selected case and update type
+                    console.log('Case ID:', caseId, 'Update Type:', updateType);
+                    
+                    // For now, we'll just show a placeholder
+                    if (updateType === 'Status') {
+                        $('#OldValue').attr('placeholder', 'Current case status');
+                    } else if (updateType === 'Priority') {
+                        $('#OldValue').attr('placeholder', 'Current priority level');
+                    } else if (updateType === 'Expected Fine') {
+                        $('#OldValue').attr('placeholder', 'Current expected fine amount');
+                    } else {
+                        $('#OldValue').attr('placeholder', 'Current value');
+                    }
+                }
+            });
+        });
+    </script>
+}

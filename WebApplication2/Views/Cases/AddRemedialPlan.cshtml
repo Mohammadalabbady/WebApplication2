@@ -1,0 +1,150 @@
+@model WebApplication2.ViewModels.RemedialPlanViewModel
+
+@{
+    ViewData["Title"] = "Add Remedial Plan";
+}
+
+<div class="container-fluid">
+    <!-- Header Section -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <h1 class="h3 mb-0 text-gray-800">Add Remedial Plan</h1>
+            <p class="mb-4">Create a remedial action plan to address compliance findings</p>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12">
+            <div class="card shadow">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">Remedial Plan Information</h6>
+                </div>
+                <div class="card-body">
+                    <form asp-action="AddRemedialPlan" method="post" enctype="multipart/form-data">
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                        
+                        <!-- Case Selection -->
+                        <div class="row mb-4">
+                            <div class="col-12">
+                                <h5 class="text-primary mb-3">Case Selection</h5>
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label asp-for="CaseId" class="control-label"></label>
+                                    <select asp-for="CaseId" class="form-select" asp-items="@(new SelectList(Model.Cases, "Id", "CaseNumber"))">
+                                        <option value="">-- Select Case --</option>
+                                    </select>
+                                    <span asp-validation-for="CaseId" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label asp-for="Status" class="control-label"></label>
+                                    <select asp-for="Status" class="form-select">
+                                        <option value="Pending">Pending</option>
+                                        <option value="In Progress">In Progress</option>
+                                        <option value="Completed">Completed</option>
+                                        <option value="Cancelled">Cancelled</option>
+                                    </select>
+                                    <span asp-validation-for="Status" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Plan Details -->
+                        <div class="row mb-4">
+                            <div class="col-12">
+                                <h5 class="text-primary mb-3">Plan Details</h5>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="form-group">
+                                    <label asp-for="Description" class="control-label"></label>
+                                    <textarea asp-for="Description" class="form-control" rows="5" 
+                                              placeholder="Describe the remedial actions to be taken, including specific steps, responsible parties, timelines, and expected outcomes..."></textarea>
+                                    <small class="form-text text-muted">Provide a comprehensive description of the remedial plan</small>
+                                    <span asp-validation-for="Description" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label asp-for="ChangeRequestNumber" class="control-label"></label>
+                                    <input asp-for="ChangeRequestNumber" class="form-control" placeholder="Enter change request number (if applicable)" />
+                                    <small class="form-text text-muted">Reference to any existing change management system</small>
+                                    <span asp-validation-for="ChangeRequestNumber" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label asp-for="ClosureDate" class="control-label"></label>
+                                    <input asp-for="ClosureDate" class="form-control" type="date" />
+                                    <small class="form-text text-muted">Target date for completing the remedial actions</small>
+                                    <span asp-validation-for="ClosureDate" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Attachments -->
+                        <div class="row mb-4">
+                            <div class="col-12">
+                                <h5 class="text-primary mb-3">Supporting Documents</h5>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="form-group">
+                                    <label asp-for="Attachments" class="control-label">Supporting Documents (Optional)</label>
+                                    <input asp-for="Attachments" class="form-control" type="file" multiple accept=".pdf,.doc,.docx,.xls,.xlsx,.jpg,.jpeg,.png" />
+                                    <small class="form-text text-muted">Upload any relevant documents such as project plans, timelines, resource allocations, or other supporting materials. Supported formats: PDF, DOC, DOCX, XLS, XLSX, JPG, JPEG, PNG</small>
+                                    <span asp-validation-for="Attachments" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Submit Buttons -->
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="form-group">
+                                    <button type="submit" class="btn btn-primary">
+                                        <i class="fas fa-save"></i> Create Remedial Plan
+                                    </button>
+                                    <a asp-action="Index" class="btn btn-secondary">
+                                        <i class="fas fa-arrow-left"></i> Back to List
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    
+    <script>
+        $(document).ready(function() {
+            // Set minimum date for closure date to today
+            var today = new Date().toISOString().split('T')[0];
+            $('#ClosureDate').attr('min', today);
+            
+            // Auto-populate closure date with a reasonable default (e.g., 30 days from now)
+            if (!$('#ClosureDate').val()) {
+                var defaultDate = new Date();
+                defaultDate.setDate(defaultDate.getDate() + 30);
+                $('#ClosureDate').val(defaultDate.toISOString().split('T')[0]);
+            }
+        });
+    </script>
+}

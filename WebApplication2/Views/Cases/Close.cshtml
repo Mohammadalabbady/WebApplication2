@@ -1,0 +1,173 @@
+@model WebApplication2.ViewModels.CaseClosureViewModel
+
+@{
+    ViewData["Title"] = "Close Case";
+}
+
+<div class="container-fluid">
+    <!-- Header Section -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <h1 class="h3 mb-0 text-gray-800">Close Case</h1>
+            <p class="mb-4">Close a case with final resolution and documentation</p>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12">
+            <div class="card shadow">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">Case Closure Information</h6>
+                </div>
+                <div class="card-body">
+                    <form asp-action="Close" method="post" enctype="multipart/form-data">
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                        
+                        <!-- Case Selection -->
+                        <div class="row mb-4">
+                            <div class="col-12">
+                                <h5 class="text-primary mb-3">Case Selection</h5>
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label asp-for="CaseId" class="control-label"></label>
+                                    <select asp-for="CaseId" class="form-select" asp-items="@(new SelectList(Model.Cases, "Id", "CaseNumber"))">
+                                        <option value="">-- Select Case --</option>
+                                    </select>
+                                    <span asp-validation-for="CaseId" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label asp-for="ClosureType" class="control-label"></label>
+                                    <select asp-for="ClosureType" class="form-select" asp-items="@(new SelectList(Model.ClosureTypes))">
+                                        <option value="">-- Select Closure Type --</option>
+                                    </select>
+                                    <span asp-validation-for="ClosureType" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Closure Details -->
+                        <div class="row mb-4">
+                            <div class="col-12">
+                                <h5 class="text-primary mb-3">Closure Details</h5>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label asp-for="ClosureDate" class="control-label"></label>
+                                    <input asp-for="ClosureDate" class="form-control" type="date" />
+                                    <small class="form-text text-muted">The date when the case is officially closed</small>
+                                    <span asp-validation-for="ClosureDate" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="control-label">Closure Type Description</label>
+                                    <div class="alert alert-info">
+                                        <strong>Compliance:</strong> Case resolved through compliance with regulations<br/>
+                                        <strong>Cancellation:</strong> Case cancelled due to invalid findings or other reasons
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="form-group">
+                                    <label asp-for="ClosureJustification" class="control-label"></label>
+                                    <textarea asp-for="ClosureJustification" class="form-control" rows="5" 
+                                              placeholder="Provide detailed justification for closing this case. Include:&#10;&#10;• Summary of actions taken to resolve the case&#10;• Evidence of compliance or reasons for cancellation&#10;• Final assessment of the situation&#10;• Any lessons learned or recommendations&#10;• References to supporting documentation..."></textarea>
+                                    <small class="form-text text-muted">This justification will become part of the permanent case record</small>
+                                    <span asp-validation-for="ClosureJustification" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Attachments -->
+                        <div class="row mb-4">
+                            <div class="col-12">
+                                <h5 class="text-primary mb-3">Final Documentation</h5>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="form-group">
+                                    <label asp-for="Attachments" class="control-label">Supporting Documents</label>
+                                    <input asp-for="Attachments" class="form-control" type="file" multiple accept=".pdf,.doc,.docx,.xls,.xlsx,.jpg,.jpeg,.png" />
+                                    <small class="form-text text-muted">Upload final documentation such as compliance certificates, audit reports, resolution summaries, or any other supporting evidence. Supported formats: PDF, DOC, DOCX, XLS, XLSX, JPG, JPEG, PNG</small>
+                                    <span asp-validation-for="Attachments" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Warning -->
+                        <div class="row mb-4">
+                            <div class="col-12">
+                                <div class="alert alert-warning">
+                                    <h6 class="alert-heading">
+                                        <i class="fas fa-exclamation-triangle"></i> Important Notice
+                                    </h6>
+                                    <p class="mb-0">
+                                        <strong>Closing a case is a final action.</strong> Once closed, the case status cannot be changed back to "Open". 
+                                        Please ensure all necessary documentation and justification are provided before proceeding.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Submit Buttons -->
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="form-group">
+                                    <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to close this case? This action cannot be undone.')">
+                                        <i class="fas fa-lock"></i> Close Case
+                                    </button>
+                                    <a asp-action="Index" class="btn btn-secondary">
+                                        <i class="fas fa-arrow-left"></i> Back to List
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    
+    <script>
+        $(document).ready(function() {
+            // Set minimum date for closure date to today
+            var today = new Date().toISOString().split('T')[0];
+            $('#ClosureDate').attr('min', today);
+            
+            // Auto-populate closure date with today's date
+            if (!$('#ClosureDate').val()) {
+                $('#ClosureDate').val(today);
+            }
+            
+            // Show different guidance based on closure type
+            $('#ClosureType').change(function() {
+                var closureType = $(this).val();
+                var justificationField = $('#ClosureJustification');
+                
+                if (closureType === 'Compliance') {
+                    justificationField.attr('placeholder', 'Provide detailed justification for closing this case. Include:\n\n• Summary of actions taken to resolve the case\n• Evidence of compliance with regulations\n• Final assessment of the situation\n• Any lessons learned or recommendations\n• References to supporting documentation...');
+                } else if (closureType === 'Cancellation') {
+                    justificationField.attr('placeholder', 'Provide detailed justification for cancelling this case. Include:\n\n• Reasons why the case is being cancelled\n• Evidence that findings were invalid or resolved\n• Assessment of the original situation\n• Any lessons learned or recommendations\n• References to supporting documentation...');
+                }
+            });
+        });
+    </script>
+}

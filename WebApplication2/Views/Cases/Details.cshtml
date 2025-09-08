@@ -1,0 +1,384 @@
+@model WebApplication2.Models.Case
+
+@{
+    ViewData["Title"] = "Case Details";
+}
+
+<div class="container-fluid">
+    <!-- Header Section -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <h1 class="h3 mb-0 text-gray-800">Case Details</h1>
+                    <p class="mb-0">Case Number: <strong>@Model.CaseNumber</strong></p>
+                </div>
+                <div>
+                    <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary">
+                        <i class="fas fa-edit"></i> Edit
+                    </a>
+                    <a asp-action="Index" class="btn btn-secondary">
+                        <i class="fas fa-arrow-left"></i> Back to List
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Case Status Banner -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="alert alert-@(Model.Status switch {
+                "Open" => "warning",
+                "Under Review" => "info",
+                "Approved" => "success",
+                "Rejected" => "danger",
+                "Closed" => "secondary",
+                _ => "light"
+            })" role="alert">
+                <h5 class="alert-heading">
+                    <i class="fas fa-info-circle"></i> Case Status: @Model.Status
+                </h5>
+                <p class="mb-0">
+                    @if (Model.Status == "Open")
+                    {
+                        <span>This case is pending approval from a Regulations Admin.</span>
+                    }
+                    else if (Model.Status == "Closed")
+                    {
+                        <span>This case was closed on @Model.ClosureDate?.ToString("MMM dd, yyyy") with reason: @Model.ClosureType</span>
+                    }
+                    else
+                    {
+                        <span>Case is currently @Model.Status.ToLower().</span>
+                    }
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- Main Case Information -->
+        <div class="col-lg-8">
+            <!-- Basic Information -->
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">Basic Information</h6>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <dl class="row">
+                                <dt class="col-sm-5">Case Number:</dt>
+                                <dd class="col-sm-7">@Model.CaseNumber</dd>
+                                
+                                <dt class="col-sm-5">Organization:</dt>
+                                <dd class="col-sm-7">@Model.Organization?.Name</dd>
+                                
+                                <dt class="col-sm-5">Legislation:</dt>
+                                <dd class="col-sm-7">@Model.Legislation?.Name</dd>
+                                
+                                <dt class="col-sm-5">Compliance Control:</dt>
+                                <dd class="col-sm-7">@(Model.ComplianceControl?.Title ?? "Not specified")</dd>
+                                
+                                <dt class="col-sm-5">Article Number:</dt>
+                                <dd class="col-sm-7">@Model.ArticleNumber</dd>
+                            </dl>
+                        </div>
+                        <div class="col-md-6">
+                            <dl class="row">
+                                <dt class="col-sm-5">Priority:</dt>
+                                <dd class="col-sm-7">
+                                    <span class="badge badge-@(Model.Priority switch {
+                                        "Low" => "success",
+                                        "Medium" => "warning",
+                                        "High" => "danger",
+                                        "Critical" => "dark",
+                                        _ => "light"
+                                    })">@Model.Priority</span>
+                                </dd>
+                                
+                                <dt class="col-sm-5">Expected Fine:</dt>
+                                <dd class="col-sm-7">@(Model.ExpectedFine?.ToString("C") ?? "Not specified")</dd>
+                                
+                                <dt class="col-sm-5">Created Date:</dt>
+                                <dd class="col-sm-7">@Model.CreatedAt.ToString("MMM dd, yyyy HH:mm")</dd>
+                                
+                                <dt class="col-sm-5">Created By:</dt>
+                                <dd class="col-sm-7">@Model.CreatedBy?.UserName</dd>
+                                
+                                <dt class="col-sm-5">Assigned To:</dt>
+                                <dd class="col-sm-7">@(Model.AssignedTo?.UserName ?? "Not assigned")</dd>
+                            </dl>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Compliance Details -->
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">Compliance Details</h6>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <dl class="row">
+                                <dt class="col-sm-5">Compliance Clause:</dt>
+                                <dd class="col-sm-7">@Model.ComplianceClause</dd>
+                                
+                                <dt class="col-sm-5">Non-compliance Status:</dt>
+                                <dd class="col-sm-7">@Model.NonComplianceStatus</dd>
+                                
+                                <dt class="col-sm-5">Channels:</dt>
+                                <dd class="col-sm-7">@Model.Channels</dd>
+                            </dl>
+                        </div>
+                        <div class="col-md-6">
+                            <dl class="row">
+                                <dt class="col-sm-5">Related to Joi:</dt>
+                                <dd class="col-sm-7">
+                                    <span class="badge badge-@(Model.IsRelatedToJoi ? "success" : "secondary")">
+                                        @(Model.IsRelatedToJoi ? "Yes" : "No")
+                                    </span>
+                                </dd>
+                                
+                                <dt class="col-sm-5">Source:</dt>
+                                <dd class="col-sm-7">@Model.Source</dd>
+                                
+                                <dt class="col-sm-5">Owning Unit/Sector:</dt>
+                                <dd class="col-sm-7">@Model.OwningUnitSector</dd>
+                                
+                                <dt class="col-sm-5">Monitoring Team:</dt>
+                                <dd class="col-sm-7">@Model.MonitoringTeam</dd>
+                                
+                                <dt class="col-sm-5">Sector Notification:</dt>
+                                <dd class="col-sm-7">@Model.DateOfSectorNotification.ToString("MMM dd, yyyy")</dd>
+                            </dl>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Case Updates -->
+            @if (Model.Updates.Any())
+            {
+                <div class="card shadow mb-4">
+                    <div class="card-header py-3">
+                        <h6 class="m-0 font-weight-bold text-primary">Case Updates</h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="timeline">
+                            @foreach (var update in Model.Updates.OrderByDescending(u => u.UpdatedAt))
+                            {
+                                <div class="timeline-item">
+                                    <div class="timeline-marker"></div>
+                                    <div class="timeline-content">
+                                        <h6 class="timeline-title">@update.UpdateType Update</h6>
+                                        <p class="timeline-text">
+                                            <strong>From:</strong> @update.OldValue<br/>
+                                            <strong>To:</strong> @update.NewValue<br/>
+                                            <strong>Details:</strong> @update.DetailsOfChange
+                                        </p>
+                                        <small class="text-muted">
+                                            Updated by @update.UpdatedBy?.UserName on @update.UpdatedAt.ToString("MMM dd, yyyy HH:mm")
+                                        </small>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            }
+
+            <!-- Remedial Plans -->
+            @if (Model.RemedialPlans.Any())
+            {
+                <div class="card shadow mb-4">
+                    <div class="card-header py-3">
+                        <h6 class="m-0 font-weight-bold text-primary">Remedial Plans</h6>
+                    </div>
+                    <div class="card-body">
+                        @foreach (var plan in Model.RemedialPlans.OrderByDescending(rp => rp.CreatedAt))
+                        {
+                            <div class="border rounded p-3 mb-3">
+                                <h6>@plan.Description</h6>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <small class="text-muted">
+                                            <strong>Status:</strong> 
+                                            <span class="badge badge-@(plan.Status switch {
+                                                "Pending" => "warning",
+                                                "In Progress" => "info",
+                                                "Completed" => "success",
+                                                "Cancelled" => "danger",
+                                                _ => "light"
+                                            })">@plan.Status</span>
+                                        </small>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <small class="text-muted">
+                                            <strong>Change Request:</strong> @(string.IsNullOrEmpty(plan.ChangeRequestNumber) ? "Not specified" : plan.ChangeRequestNumber)
+                                        </small>
+                                    </div>
+                                </div>
+                                @if (plan.ClosureDate.HasValue)
+                                {
+                                    <div class="mt-2">
+                                        <small class="text-muted">
+                                            <strong>Closure Date:</strong> @plan.ClosureDate.Value.ToString("MMM dd, yyyy")
+                                        </small>
+                                    </div>
+                                }
+                                <div class="mt-2">
+                                    <small class="text-muted">
+                                        Created by @plan.CreatedBy?.UserName on @plan.CreatedAt.ToString("MMM dd, yyyy")
+                                    </small>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+            }
+        </div>
+
+        <!-- Sidebar -->
+        <div class="col-lg-4">
+            <!-- Quick Actions -->
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">Quick Actions</h6>
+                </div>
+                <div class="card-body">
+                    <div class="d-grid gap-2">
+                        <a asp-action="Update" asp-route-id="@Model.Id" class="btn btn-warning btn-sm">
+                            <i class="fas fa-sync"></i> Update Case
+                        </a>
+                        <a asp-action="AddRemedialPlan" asp-route-id="@Model.Id" class="btn btn-success btn-sm">
+                            <i class="fas fa-plus"></i> Add Remedial Plan
+                        </a>
+                        @if (Model.Status != "Closed")
+                        {
+                            <a asp-action="Close" asp-route-id="@Model.Id" class="btn btn-secondary btn-sm">
+                                <i class="fas fa-lock"></i> Close Case
+                            </a>
+                        }
+                    </div>
+                </div>
+            </div>
+
+            <!-- Attachments -->
+            @if (Model.Attachments.Any())
+            {
+                <div class="card shadow mb-4">
+                    <div class="card-header py-3">
+                        <h6 class="m-0 font-weight-bold text-primary">Attachments</h6>
+                    </div>
+                    <div class="card-body">
+                        @foreach (var attachment in Model.Attachments)
+                        {
+                            <div class="d-flex align-items-center mb-2">
+                                <i class="fas fa-file-alt text-primary me-2"></i>
+                                <div class="flex-grow-1">
+                                    <small class="d-block">@attachment.OriginalFileName</small>
+                                    <small class="text-muted">@(attachment.FileSize / 1024) KB</small>
+                                </div>
+                                <a href="/uploads/@attachment.FileName" target="_blank" class="btn btn-sm btn-outline-primary">
+                                    <i class="fas fa-download"></i>
+                                </a>
+                            </div>
+                        }
+                    </div>
+                </div>
+            }
+
+            <!-- Workflow Status -->
+            @if (Model.Workflows.Any())
+            {
+                <div class="card shadow mb-4">
+                    <div class="card-header py-3">
+                        <h6 class="m-0 font-weight-bold text-primary">Workflow Status</h6>
+                    </div>
+                    <div class="card-body">
+                        @foreach (var workflow in Model.Workflows.OrderByDescending(w => w.RequestedAt))
+                        {
+                            <div class="border rounded p-2 mb-2">
+                                <small class="d-block">
+                                    <strong>@workflow.WorkflowType</strong>
+                                </small>
+                                <small class="text-muted">
+                                    Status: 
+                                    <span class="badge badge-@(workflow.Status switch {
+                                        "Pending" => "warning",
+                                        "Approved" => "success",
+                                        "Rejected" => "danger",
+                                        _ => "light"
+                                    })">@workflow.Status</span>
+                                </small>
+                                <small class="d-block text-muted">
+                                    Requested by @workflow.RequestedBy?.UserName on @workflow.RequestedAt.ToString("MMM dd, yyyy")
+                                </small>
+                                @if (workflow.ApprovedBy != null)
+                                {
+                                    <small class="d-block text-muted">
+                                        @(workflow.Status == "Approved" ? "Approved" : "Rejected") by @workflow.ApprovedBy.UserName on @workflow.ApprovedAt?.ToString("MMM dd, yyyy")
+                                    </small>
+                                }
+                                @if (!string.IsNullOrEmpty(workflow.Comments))
+                                {
+                                    <small class="d-block text-muted">
+                                        <strong>Comments:</strong> @workflow.Comments
+                                    </small>
+                                }
+                            </div>
+                        }
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<style>
+.timeline {
+    position: relative;
+    padding-left: 30px;
+}
+
+.timeline-item {
+    position: relative;
+    margin-bottom: 20px;
+}
+
+.timeline-marker {
+    position: absolute;
+    left: -35px;
+    top: 0;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background-color: #007bff;
+    border: 2px solid #fff;
+    box-shadow: 0 0 0 3px #007bff;
+}
+
+.timeline-item:not(:last-child)::after {
+    content: '';
+    position: absolute;
+    left: -29px;
+    top: 12px;
+    width: 2px;
+    height: calc(100% + 8px);
+    background-color: #007bff;
+}
+
+.timeline-title {
+    margin-bottom: 5px;
+    color: #333;
+}
+
+.timeline-text {
+    margin-bottom: 5px;
+    color: #666;
+}
+</style>
